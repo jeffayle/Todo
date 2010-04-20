@@ -110,6 +110,18 @@ class Todo
 
     def addItem title #+title
         item = TodoItem.new
+        #Check for @
+        if title['@']
+            title, due = title.split '@', 2
+            title.strip!
+            due.strip!
+            due = Chronic.parse due
+            if due
+                item.due_at = due
+            else
+                @out.puts "Invalid date (item created without due date)"
+            end
+        end
         item.title = title
         item.save
         @out.puts "Added item ##{item.id} (#{item.title})"
