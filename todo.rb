@@ -139,11 +139,13 @@ class Todo
     def check id #/(id)
         unless id
             @out.puts "Bad ID"
+            return
         end
 
         item = TodoItem.get id
         unless item
             @out.puts "Bad ID"
+            return
         end
 
         item.completed = !item.completed
@@ -156,17 +158,20 @@ class Todo
         id = id.to_i
         unless id or time
             @out.puts "Bad ID or no time"
+            return
         end
 
         item = TodoItem.get id
         unless item
             @out.puts "Bad ID"
+            return
         end
 
         #Look up time
         time = Chronic.parse time
         unless time
             @out.puts "Bad time"
+            return
         end
 
         item.due_at = time
