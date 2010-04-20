@@ -20,7 +20,7 @@ class TodoItem
     property :important, Boolean, :default=>false
 
     def display to
-        to.printf '[%s] %4d: %s', completed ? 'x':' ', id, title
+        to.printf '[%s] %4d: %s', important ? '*':' ', id, title
         if due_at
             to.printf ' (%s)',
                     distance_of_time_in_words(Time.now, due_at.to_local_time) 
