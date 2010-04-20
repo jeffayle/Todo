@@ -1,0 +1,62 @@
+# Todo -- Simple command line todo list
+Todo is a simple command based todo list.
+
+## Installation
+Copy 'todo.rb' somewhere that your shell will find it. Change line `8` to set
+the database location (default will drop it in the current directory). You can
+also set it up to use MySQL, PostgreSQL or many other database backends. See
+DataMapper documentation for more.
+
+## Usage
+Run `todo.rb` from the command line. You will be given a prompt with `:`
+
+### Adding a todo item
+    : +Something I need to do
+    Added item #5 (Something I need to do)
+
+`5` is the ID you will need to do anything with this later.
+
+### Seeing what needs to be done
+    : todo
+    [ ]    5: Something I need to do
+
+This displays all items that are not completed, along with their ID.
+
+### Adding a due date to an item
+    : @5 next thursday
+    Set due time for 5 to 2010-04-22T12:00:00-04:00
+
+Todo uses natural date parsing, you don't need to use a specific format for due
+dates
+
+### Adding a new item with a due date
+    : +That thing I need to do @monday
+    Added item #6 (That thing I need to do)
+    : todo
+    [ ]    5: Something I need to do (2 days)
+    [ ]    6: That thing I need to do (6 days)
+
+You can also see that listing outstanding items also tells you when they should
+be completed by.
+
+### Marking items as complete
+    : /5
+    : todo
+    [ ]    6: That thing I need to do (6 days)
+    : /5
+    : todo
+    [ ]    5: Something I need to do (2 days)
+    [ ]    6: That thing I need to do (6 days)
+    
+
+Sometimes you actually complete the stuff you're supposed to (well, I heard
+some people do), this can by done with the `/` command. This can also mark them
+incomplete, if you do it on a completed item.
+
+### Marking items as important
+    : *6
+    : todo
+    [ ]    5: Something I need to do (2 days)
+    [*]    6: That thing I need to do (6 days)
+
+Nothing too exciting here.
