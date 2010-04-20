@@ -3,6 +3,9 @@ require 'rubygems'
 require 'chronic'
 require 'dm-core'
 require 'dm-timestamps'
+require 'action_view'
+
+include ActionView::Helpers::DateHelper
 
 ## Database stuff
 DataMapper.setup :default, "sqlite3://#{Dir.pwd}/db.sqlite3"
@@ -17,11 +20,34 @@ class TodoItem
     property :important, Boolean, :default=>false
 
     def display to
-        to.printf "[%s] %4d: %s\n", completed ? 'x':' ', id, title
+        to.printf '[%s] %4d: %s', completed ? 'x':' ', id, title
+        if due_at
+            to.printf ' (%s)',
+                    distance_of_time_in_words(Time.now, due_at.to_local_time) 
+        end
+        to.puts
     end
 end
 DataMapper.auto_upgrade!
 
+## Ammendments to DateTime
+class DateTime
+  def to_gm_time
+    to_time(new_offset, :gm)
+  end
+
+  def to_local_time
+    to_time(new_offset(DateTime.now.offset-offset), :local)
+  end
+
+  private
+  def to_time(dest, method)
+    #Convert a fraction of a day to a number of microseconds
+    usec = (dest.sec_fraction * 60 * 60 * 24 * (10**6)).to_i
+    Time.send(method, dest.year, dest.month, dest.day, dest.hour, dest.min,
+              dest.sec, usec)
+  end
+end
 
 ## Interface stuff
 class Todo
