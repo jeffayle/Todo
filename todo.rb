@@ -88,6 +88,8 @@ class Todo
             check line[1..-1].to_i
         elsif line[0] == ?@
             setDue line[1..-1]
+        elsif line[0] == ?*
+            setImportant line[1..-1]
         end
      end
 
@@ -101,6 +103,7 @@ class Todo
         @out.puts "+(title) -- Adds new todo item with specified title"
         @out.puts "/(id) -- Checks or unchecks item with specified ID"
         @out.puts "@(id) (time) -- Marks item to be due before time"
+        @out.puts "*(id) -- marks item as important"
     end
 
     def done #exit
@@ -170,6 +173,23 @@ class Todo
         item.save
 
         @out.puts "Set due time for #{item.id} to #{item.due_at}"
+    end
+
+    def setImportant line #*(id)
+        id = line.to_i
+        unless id
+            @out.puts "Bad ID"
+            return
+        end
+
+        item = TodoItem.get id
+        unless item
+            @out.puts "Bad ID"
+            return
+        end
+
+        item.important = !item.important
+        item.save
     end
 end
 
